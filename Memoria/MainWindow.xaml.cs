@@ -42,7 +42,7 @@ namespace Memoria
         private void CreateCardSymbols()
         {
             cardSymbols = new List<string>() { "🌟", "🌞", "💕", "🌼", "🌴", "🐟", "💜", "🎉" };
-            cardSymbols.AddRange(cardSymbols); // Duplicate for pairs
+            cardSymbols.AddRange(cardSymbols); 
         }
 
         private void SetupGrid()
@@ -55,7 +55,10 @@ namespace Memoria
         private void RandomizeCards()
         {
             GameGrid.Children.Clear();
-            foreach (var card in cardSymbols.OrderBy(x => Guid.NewGuid()))
+
+            var randomizedCards = cardSymbols.OrderBy(x => Guid.NewGuid()).ToList();
+
+            foreach (var card in randomizedCards)
             {
                 var btn = new Button
                 {
@@ -69,7 +72,9 @@ namespace Memoria
                     Margin = new Thickness(5),
                     Cursor = System.Windows.Input.Cursors.Hand
                 };
+
                 btn.Click += Card_Click;
+
                 GameGrid.Children.Add(btn);
             }
         }
@@ -86,8 +91,8 @@ namespace Memoria
         {
             elapsedTime = 0;
             score = 0;
-            ScoreLabel.Content = $"Score: {score}";
-            TimerLabel.Content = $"Time: {elapsedTime}s";
+            ScoreLabel.Content = $"Pontok: {score}";
+            TimerLabel.Content = $"Idő: {elapsedTime}s";
             RandomizeCards();
             gameTimer.Start();
         }
@@ -119,7 +124,7 @@ namespace Memoria
                     firstClicked = null;
                     secondClicked = null;
                     score++;
-                    ScoreLabel.Content = $"Score: {score}";
+                    ScoreLabel.Content = $"Pontok: {score}";
                     CheckForGameEnd();
                 }
                 else
@@ -141,7 +146,7 @@ namespace Memoria
         private void GameTimer_Tick(object sender, EventArgs e)
         {
             elapsedTime++;
-            TimerLabel.Content = $"Time: {elapsedTime}s";
+            TimerLabel.Content = $"Idő: {elapsedTime}s";
         }
 
         private void CheckForGameEnd()
@@ -149,7 +154,7 @@ namespace Memoria
             if (GameGrid.Children.OfType<Button>().All(b => b.IsEnabled == false))
             {
                 gameTimer.Stop();
-                MessageBox.Show($"Congratulations! You completed the game in {elapsedTime} seconds.", "Game Over", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show($"Gratulálok! Kivitted a gameszkót {elapsedTime} másodperc alatt.", "Vége a játéknak.", MessageBoxButton.OK, MessageBoxImage.Information);
                 StartNewGame();
             }
         }
